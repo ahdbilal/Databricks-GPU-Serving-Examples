@@ -22,7 +22,6 @@ class Dolly(mlflow.pyfunc.PythonModel):
       context.artifacts['repository'], torch_dtype=torch.bfloat16, 
       low_cpu_mem_usage=True, device_map="auto",
       pad_token_id=self.tokenizer.eos_token_id).to('cuda')
-    self.model.eval()
 
   def predict(self, context, model_input):
     message = model_input["message"][0]
@@ -36,7 +35,6 @@ class Dolly(mlflow.pyfunc.PythonModel):
     with torch.no_grad():
       output = self.model.generate(encoded_input, do_sample=True, temperature=temperature, max_length=max_tokens)
       generated_text = self.tokenizer.decode(output[0], skip_special_tokens=True)
-   # torch.cuda.empty_cache()
     
     return generated_text
 
