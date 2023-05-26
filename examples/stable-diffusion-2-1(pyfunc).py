@@ -1,5 +1,9 @@
 # Databricks notebook source
-# Databricks notebook source
+# MAGIC %md
+# MAGIC ## Log the Stable Diffusion Model to Mlflow Registry
+
+# COMMAND ----------
+
 import pandas as pd
 import numpy as np
 import mlflow
@@ -60,9 +64,42 @@ result_image_np = loaded_model.predict(input_example)
 
 # COMMAND ----------
 
-# Save the resulting image
+# plot the resulting image
 import matplotlib.pyplot as plt
 plt.imshow(result_image_np)
-plt.savefig('result_image.png')
 
 # COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Make API request to Model Serving Endpoint
+
+# COMMAND ----------
+
+import os
+import requests
+import pandas as pd
+import json
+import matplotlib.pyplot as plt
+
+# define parameters at the start
+URL = ""
+DATABRICKS_TOKEN = ""
+INPUT_EXAMPLE = pd.DataFrame({"prompt":["a photo of an astronaut riding a horse on water"]})
+
+def score_model(dataset, url=URL, databricks_token=DATABRICKS_TOKEN):
+    headers = {'Authorization': f'Bearer {databricks_token}', 
+               'Content-Type': 'application/json'}
+    ds_dict = {'dataframe_split': dataset.to_dict(orient='split')}
+    data_json = json.dumps(ds_dict, allow_nan=True)
+    response = requests.request(method='POST', headers=headers, url=url, data=data_json)
+    if response.status_code != 200:
+        raise Exception(f'Request failed with status {response.status_code}, {response.text}')
+
+    return response.json()
+
+# scoring the model
+t = score_model(INPUT_EXAMPLE)
+
+# visualizing the predictions
+plt.imshow(t['predictions'])
+plt.show()
