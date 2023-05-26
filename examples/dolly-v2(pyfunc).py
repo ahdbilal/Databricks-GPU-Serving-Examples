@@ -22,6 +22,7 @@ class Dolly(mlflow.pyfunc.PythonModel):
       context.artifacts['repository'], torch_dtype=torch.bfloat16, 
       low_cpu_mem_usage=True, device_map="auto",
       pad_token_id=self.tokenizer.eos_token_id).to('cuda')
+    self.model.eval()
 
   def predict(self, context, model_input):
     message = model_input["message"][0]
