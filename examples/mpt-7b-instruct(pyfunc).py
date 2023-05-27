@@ -8,12 +8,12 @@ import torch
 # COMMAND ----------
 
 from huggingface_hub import snapshot_download
-# Download the Dolly model snapshot from huggingface
-snapshot_location = snapshot_download(repo_id="databricks/dolly-v2-3b")
+# Download the MPT model snapshot from huggingface
+snapshot_location = snapshot_download(repo_id="mosaicml/mpt-7b-instruct")
 
 # COMMAND ----------
 
-class Dolly(mlflow.pyfunc.PythonModel):
+class MPT(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         """
         This method initializes the tokenizer and language model
@@ -21,11 +21,22 @@ class Dolly(mlflow.pyfunc.PythonModel):
         """
         # Initialize tokenizer and language model
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(
-            context.artifacts['repository'], padding_side="left")
+          context.artifacts['repository'], padding_side="left")
+
+        config = transformers.AutoConfig.from_pretrained(
+            context.artifacts['repository'], 
+            trust_remote_code=True
+        )
+        # support for flast-attn and openai-triton is coming soon
+        # config.attn_config['attn_impl'] = 'triton'
+        
         self.model = transformers.AutoModelForCausalLM.from_pretrained(
-            context.artifacts['repository'], torch_dtype=torch.bfloat16,
-            low_cpu_mem_usage=True, device_map="auto",
-            pad_token_id=self.tokenizer.eos_token_id).to('cuda')
+            context.artifacts['repository'], 
+            config=config,
+            torch_dtype=torch.bfloat16,
+            trust_remote_code=True)
+        self.model.to(device='cuda')
+        
         self.model.eval()
 
     def _build_prompt(self, instruction):
@@ -92,20 +103,18 @@ input_example=pd.DataFrame({
 with mlflow.start_run() as run:  
     mlflow.pyfunc.log_model(
         "model",
-        python_model=Dolly(),
+        python_model=MPT(),
         artifacts={'repository' : snapshot_location},
-        pip_requirements=["torch", "transformers", "accelerate"],
-        input_example=input_example,
-        signature=signature,
+        pip_requirements=["torch", "transformers", "accelerate", "einops", "sentencepiece"],
+        input_example=pd.DataFrame({"message":["what is ML?"], "temperature": [0.5],"max_tokens": [100]}),
     )
-
 
 # COMMAND ----------
 
 # Register model in MLflow Model Registry
 result = mlflow.register_model(
     "runs:/"+run.info.run_id+"/model",
-    "dolly-v2-3b"
+    "mpt-7b-instruct"
 )
 
 # COMMAND ----------
@@ -118,3 +127,7 @@ loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}
 # Make a prediction using the loaded model
 input_example=pd.DataFrame({"message":["what is ML?"], "temperature": [0.5],"max_tokens": [100]})
 loaded_model.predict(input_example)
+
+# COMMAND ----------
+
+

@@ -50,6 +50,23 @@ class Replit(mlflow.pyfunc.PythonModel):
 
 # COMMAND ----------
 
+from mlflow.models.signature import ModelSignature
+from mlflow.types import DataType, Schema, ColSpec
+
+# Define input and output schema
+input_schema = Schema([
+    ColSpec(DataType.string, "message"), 
+    ColSpec(DataType.double, "temperature"), 
+    ColSpec(DataType.integer, "max_tokens")])
+output_schema = Schema([ColSpec(DataType.string)])
+signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+
+# Define input example
+input_example=pd.DataFrame({
+            "message":["def fibonacci(n): "], 
+            "temperature": [0.5],
+            "max_tokens": [100]})
+
 # Log the model with its details such as artifacts, pip requirements and input example
 with mlflow.start_run() as run:  
     mlflow.pyfunc.log_model(
@@ -57,20 +74,25 @@ with mlflow.start_run() as run:
         python_model=Replit(),
         artifacts={'repository' : snapshot_location},
         pip_requirements=["torch", "transformers", "einops", "sentencepiece"],
-        input_example=pd.DataFrame({"message":["def fibonacci(n): "], "max_length": [100], "temperature": [0.2]}),
+        input_example=input_example,
+        signature=signature
     )
 
 # COMMAND ----------
 
+# Register model in MLflow Model Registry
+result = mlflow.register_model(
+    "runs:/"+run.info.run_id+"/model",
+    "replit-code-v1-3b"
+)
+
+# COMMAND ----------
+
 # Load the logged model
-loaded_model = mlflow.pyfunc.load_model("runs:/"+run.info.run_id+"/model")
+loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}")
 
 # COMMAND ----------
 
 # Make a prediction using the loaded model
 input_example=pd.DataFrame({"message":["def fibonacci(n): "], "max_length": [100], "temperature": [0.2], "num_return_sequences": [1]})
 loaded_model.predict(input_example)
-
-# COMMAND ----------
-
-
