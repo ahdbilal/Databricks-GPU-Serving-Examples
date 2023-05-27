@@ -71,6 +71,23 @@ class Dolly(mlflow.pyfunc.PythonModel):
 
 # COMMAND ----------
 
+from mlflow.models.signature import ModelSignature
+from mlflow.types import DataType, Schema, ColSpec
+
+# Define input and output schema
+input_schema = Schema([
+    ColSpec(DataType.string, "message"), 
+    ColSpec(DataType.double, "temperature"), 
+    ColSpec(DataType.integer, "max_tokens")])
+output_schema = Schema([ColSpec(DataType.string)])
+signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+
+# Define input example
+input_example=pd.DataFrame({
+            "message":["what is ML?"], 
+            "temperature": [0.5],
+            "max_tokens": [100]})
+
 # Log the model with its details such as artifacts, pip requirements and input example
 with mlflow.start_run() as run:  
     mlflow.pyfunc.log_model(
@@ -78,13 +95,23 @@ with mlflow.start_run() as run:
         python_model=Dolly(),
         artifacts={'repository' : snapshot_location},
         pip_requirements=["torch", "transformers", "accelerate"],
-       input_example=pd.DataFrame({"message":["what is ML?"], "temperature": [0.5],"max_tokens": [100]}),
+        input_example=input_example,
+        signature=signature,
     )
+
+
+# COMMAND ----------
+
+# Register model in MLflow Model Registry
+result = mlflow.register_model(
+    "runs:/"+run.info.run_id+"/model",
+    "dolly-v2-3b"
+)
 
 # COMMAND ----------
 
 # Load the logged model
-loaded_model = mlflow.pyfunc.load_model("runs:/"+run.info.run_id+"/model")
+loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}")
 
 # COMMAND ----------
 

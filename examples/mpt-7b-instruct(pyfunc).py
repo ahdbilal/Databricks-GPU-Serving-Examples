@@ -1,5 +1,4 @@
 # Databricks notebook source
-# Databricks notebook source
 import pandas as pd
 import numpy as np
 import transformers
@@ -14,7 +13,6 @@ snapshot_location = snapshot_download(repo_id="mosaicml/mpt-7b-instruct")
 
 # COMMAND ----------
 
-
 class MPT(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         """
@@ -22,20 +20,22 @@ class MPT(mlflow.pyfunc.PythonModel):
         using the specified model repository.
         """
         # Initialize tokenizer and language model
-        self.tokenizer = transformers.AutoTokenizer.from_pretrained("EleutherAI/gpt-neox-20b", padding_side="left")
+        self.tokenizer = transformers.AutoTokenizer.from_pretrained(
+          context.artifacts['repository'], padding_side="left")
 
         config = transformers.AutoConfig.from_pretrained(
             context.artifacts['repository'], 
             trust_remote_code=True
         )
-        #config.attn_config['attn_impl'] = 'triton'
+        # support for flast-attn and openai-triton is coming soon
+        # config.attn_config['attn_impl'] = 'triton'
         
         self.model = transformers.AutoModelForCausalLM.from_pretrained(
             context.artifacts['repository'], 
             config=config,
             torch_dtype=torch.bfloat16,
             trust_remote_code=True)
-        self.model.to(device='cuda:0')
+        self.model.to(device='cuda')
         
         self.model.eval()
 
@@ -82,6 +82,23 @@ class MPT(mlflow.pyfunc.PythonModel):
 
 # COMMAND ----------
 
+from mlflow.models.signature import ModelSignature
+from mlflow.types import DataType, Schema, ColSpec
+
+# Define input and output schema
+input_schema = Schema([
+    ColSpec(DataType.string, "message"), 
+    ColSpec(DataType.double, "temperature"), 
+    ColSpec(DataType.integer, "max_tokens")])
+output_schema = Schema([ColSpec(DataType.string)])
+signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+
+# Define input example
+input_example=pd.DataFrame({
+            "message":["what is ML?"], 
+            "temperature": [0.5],
+            "max_tokens": [100]})
+
 # Log the model with its details such as artifacts, pip requirements and input example
 with mlflow.start_run() as run:  
     mlflow.pyfunc.log_model(
@@ -94,7 +111,16 @@ with mlflow.start_run() as run:
 
 # COMMAND ----------
 
-loaded_model = mlflow.pyfunc.load_model("runs:/"+run.info.run_id+"/model")
+# Register model in MLflow Model Registry
+result = mlflow.register_model(
+    "runs:/"+run.info.run_id+"/model",
+    "mpt-7b-instruct"
+)
+
+# COMMAND ----------
+
+# Load the logged model
+loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}")
 
 # COMMAND ----------
 

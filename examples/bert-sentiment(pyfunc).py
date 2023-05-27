@@ -37,19 +37,41 @@ class BertSentimentClassifier(mlflow.pyfunc.PythonModel):
 # COMMAND ----------
 
 # Log the model with its details such as artifacts, pip requirements and input example
+from mlflow.models.signature import ModelSignature
+from mlflow.types import DataType, Schema, ColSpec
+
+# Define input and output schema
+input_schema = Schema([ColSpec(DataType.string, "review")])
+output_schema = Schema([ColSpec(DataType.string, "label")])
+signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+
+# Define the input example
+input_example = pd.DataFrame({"review":["I love this movie."]})
+
+# Log the model with details such as artifacts, pip requirements, input example, and signature
 with mlflow.start_run() as run:  
     mlflow.pyfunc.log_model(
         "model",
         python_model=BertSentimentClassifier(),
         artifacts={'repository' : snapshot_location},
         pip_requirements=["torch", "transformers"],
-        input_example=pd.DataFrame({"review":["I love this movie."]}),
+        input_example=input_example,
+        signature=signature,
     )
+
+
+# COMMAND ----------
+
+# Register model in MLflow Model Registry
+result = mlflow.register_model(
+    "runs:/"+run.info.run_id+"/model",
+    "bert-base-uncased-imdb"
+)
 
 # COMMAND ----------
 
 # Load the logged model
-loaded_model = mlflow.pyfunc.load_model("runs:/"+run.info.run_id+"/model")
+loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}")
 
 # COMMAND ----------
 
