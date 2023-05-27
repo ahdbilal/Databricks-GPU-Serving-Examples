@@ -88,7 +88,7 @@ with mlflow.start_run() as run:
         "model",
         python_model=MPT(),
         artifacts={'repository' : snapshot_location},
-        pip_requirements=["torch", "transformers", "accelerate"],
+        pip_requirements=["torch", "transformers", "accelerate", "einops", "sentencepiece"],
         input_example=pd.DataFrame({"message":["what is ML?"], "temperature": [0.5],"max_tokens": [100]}),
     )
 
