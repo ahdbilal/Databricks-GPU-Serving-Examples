@@ -4,9 +4,9 @@ Welcome to this GitHub repository. Here, we provide example scripts to deploy fo
 | Model | Hugging Face Model Repo | Deployment Script |
 |-------|------------------------|-------------------|
 | Sentiment Analysis using BERT | [link to model](https://huggingface.co/models?search=bert) | [link to script](examples/bert-sentiment(pyfunc).py) |
-| Instruction-Tuned Large Language Model (LLM) with databricks-dolly | [link to model](https://huggingface.co/models?search=dolly) | [link to script](examples/dolly-v2(pyfunc).py) |
-| Text-to-Image Generation Model with Stable Diffusion-2-1 | [link to model](https://huggingface.co/models?search=stable-diffusion-2-1) | [link to script](examples/stable-diffusion-2-1(pyfunc).py) |
-| Code Completion with replit/replit-code-v1-3b | [link to model](https://huggingface.co/models?search=replit-code-v1-3b) | [link to script](examples/replit-code-v1-3b(pyfunc).py) |
+| Instruction-Tuned Large Language Model (LLM) with databricks-dolly | [link to model](https://huggingface.co/databricks/dolly-v2-7b) | [link to script](examples/dolly-v2(pyfunc).py) |
+| Text-to-Image Generation Model with Stable Diffusion-2-1 | [link to model](https://huggingface.co/stabilityai/stable-diffusion-2-1) | [link to script](examples/stable-diffusion-2-1(pyfunc).py) |
+| Code Completion with replit-code-v1-3b | [link to model](https://huggingface.co/replit/replit-code-v1-3b) | [link to script](examples/replit-code-v1-3b(pyfunc).py) |
 
 ## How to Use
 Clone this repository and navigate to the desired script file. Follow the instructions within the script to deploy the model. Note that this requires GPU model serving. For more information on GPU model serving, reach out to the Databricks team.
