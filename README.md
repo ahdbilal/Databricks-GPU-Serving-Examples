@@ -1,5 +1,5 @@
 # Deploying Large Language Models on Databricks Model Serving
-Welcome to this GitHub repository. Here, we provide example scripts to deploy four different Huggingface models on Databricks Model Serving. These examples can also guide you in deploying other models following similar steps. The models included in this repository are:
+Welcome to this GitHub repository. Here, we provide example scripts to deploy different Huggingface models on Databricks Model Serving. These examples can also guide you in deploying other models following similar steps. The models included in this repository are:
 
 | Model | Hugging Face Model Repo | Deployment Script |
 |-------|------------------------|-------------------|
