@@ -9,7 +9,9 @@ Welcome to this GitHub repository. Here, we provide example scripts to deploy di
 | Code Completion with replit-code-v1-3b | [link to model](https://huggingface.co/replit/replit-code-v1-3b) | [link to script](examples/replit-code-v1-3b(pyfunc).py) |
 
 ## How to Use
-Clone this repository and navigate to the desired script file. Follow the instructions within the script to deploy the model. Note that this requires GPU model serving. For more information on GPU model serving, reach out to the Databricks team.
+Clone this repository and navigate to the desired script file. Follow the instructions within the script to deploy the model. 
+- Note that this requires GPU model serving. For more information on GPU model serving, reach out to the Databricks team.
+- We recommend running the script on A10/A100 Nvidia Instances with 64GB+ CPU memory
 
 ## Contribution
 Feel free to contribute to this project by forking this repo and creating pull requests. If you encounter any issues or have any questions, create an issue on this repo, and we'll try our best to respond in a timely manner.
