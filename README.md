@@ -1,2 +1,16 @@
-# db-gpu-serving-examples
-Databricks GPU Model Serving Example Scripts
+# Deploying Large Language Models on Databricks Model Serving
+Welcome to this GitHub repository. Here, we provide example scripts to deploy four different Huggingface models on Databricks Model Serving. These examples can also guide you in deploying other models following similar steps. The models included in this repository are:
+
+- Sentiment Analysis using BERT [link to script](examples/bert-sentiment(pyfunc).py)
+- Instruction-Tuned Large Language Model (LLM) with Databricks Dolly [link to script](examples/dolly-v2(pyfunc).py)
+- Text-to-Image Generation Model with Stable Diffusion-2-1 [link to script](examples/stable-diffusion-2-1(pyfunc).py)
+- Code Completion with replit/replit-code-v1-3b [link to script](examples/replit-code-v1-3b(pyfunc).py)
+
+## How to Use
+Clone this repository and navigate to the desired script file. Follow the instructions within the script to deploy the model. Note that this requires GPU model serving. For more information on GPU model serving, reach out to the Databricks team.
+
+## Contribution
+Feel free to contribute to this project by forking this repo and creating pull requests. If you encounter any issues or have any questions, create an issue on this repo, and we'll try our best to respond in a timely manner.
+
+## License
+This project is licensed under the terms of the MIT license. For the usage license of the individual models, please check the respective links provided above.
