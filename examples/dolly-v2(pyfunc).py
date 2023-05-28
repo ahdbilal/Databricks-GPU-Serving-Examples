@@ -4,6 +4,8 @@ import numpy as np
 import transformers
 import mlflow
 import torch
+!pip install py3nvml
+import py3nvml
 
 # COMMAND ----------
 
@@ -67,6 +69,13 @@ class Dolly(mlflow.pyfunc.PythonModel):
         prompt_length = len(self.tokenizer.encode(prompt, return_tensors='pt')[0])
         generated_response = self.tokenizer.decode(output[0][prompt_length:], skip_special_tokens=True)
 
+        py3nvml.py3nvml.nvmlInit()
+        self.handle = py3nvml.py3nvml.nvmlDeviceGetHandleByIndex(0)
+        info = py3nvml.py3nvml.nvmlDeviceGetMemoryInfo(self.handle)
+        util = py3nvml.py3nvml.nvmlDeviceGetUtilizationRates(self.handle)
+        print(f"Percentage of GPU memory used: {info.used / info.total * 100:.2f}%, GPU Utilization: {util.gpu:.2f}%", flush=True)
+        py3nvml.py3nvml.nvmlShutdown()
+
         return generated_response
 
 # COMMAND ----------
@@ -78,7 +87,7 @@ from mlflow.types import DataType, Schema, ColSpec
 input_schema = Schema([
     ColSpec(DataType.string, "message"), 
     ColSpec(DataType.double, "temperature"), 
-    ColSpec(DataType.integer, "max_tokens")])
+    ColSpec(DataType.long, "max_tokens")])
 output_schema = Schema([ColSpec(DataType.string)])
 signature = ModelSignature(inputs=input_schema, outputs=output_schema)
 
@@ -94,7 +103,7 @@ with mlflow.start_run() as run:
         "model",
         python_model=Dolly(),
         artifacts={'repository' : snapshot_location},
-        pip_requirements=["torch", "transformers", "accelerate"],
+        pip_requirements=["torch", "transformers", "accelerate", "py3nvml"],
         input_example=input_example,
         signature=signature,
     )
@@ -105,7 +114,7 @@ with mlflow.start_run() as run:
 # Register model in MLflow Model Registry
 result = mlflow.register_model(
     "runs:/"+run.info.run_id+"/model",
-    "dolly-v2-3b"
+    "dolly-with-gpu-monitoring"
 )
 
 # COMMAND ----------
@@ -116,5 +125,9 @@ loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}
 # COMMAND ----------
 
 # Make a prediction using the loaded model
-input_example=pd.DataFrame({"message":["what is ML?"], "temperature": [0.5],"max_tokens": [100]})
+input_example=pd.DataFrame({"message":["what is ML?"], "temperature": [0.5],"max_tokens": [10]})
 loaded_model.predict(input_example)
+
+# COMMAND ----------
+
+
