@@ -96,7 +96,6 @@ import matplotlib.pyplot as plt
 # define parameters at the start
 URL = ""
 DATABRICKS_TOKEN = ""
-INPUT_EXAMPLE = pd.DataFrame({"prompt":["a photo of an astronaut riding a horse on water"]})
 
 def score_model(dataset, url=URL, databricks_token=DATABRICKS_TOKEN):
     headers = {'Authorization': f'Bearer {databricks_token}', 
