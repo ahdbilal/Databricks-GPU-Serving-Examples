@@ -65,7 +65,7 @@ with mlflow.start_run() as run:
 # Register model in MLflow Model Registry
 result = mlflow.register_model(
     "runs:/"+run.info.run_id+"/model",
-    "bert-base-uncased-imdb"
+    "bert-sentiment-classifier"
 )
 
 # COMMAND ----------

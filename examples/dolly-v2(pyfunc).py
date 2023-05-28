@@ -107,6 +107,7 @@ result = mlflow.register_model(
     "runs:/"+run.info.run_id+"/model",
     "dolly-v2-3b"
 )
+# Note: Due to the large size of the model, the registration process might take longer than the default maximum wait time of 300 seconds. MLflow could throw an exception indicating that the max wait time has been exceeded. Don't worry if this happens - it's not necessarily an error. Instead, you can confirm the registration status of the model by directly checking the model registry. This exception is merely a time-out notification and does not necessarily imply a failure in the registration process.
 
 # COMMAND ----------
 
