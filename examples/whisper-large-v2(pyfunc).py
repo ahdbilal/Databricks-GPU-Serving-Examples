@@ -111,6 +111,7 @@ def score_model(dataset, url=URL, databricks_token=DATABRICKS_TOKEN):
 
 # COMMAND ----------
 
+# play a sample audio
 from IPython.display import Audio
 ds = load_dataset("hf-internal-testing/librispeech_asr_dummy", "clean", split="validation")
 sample = ds[12]["audio"]
@@ -119,8 +120,5 @@ Audio(sample["array"], rate=sample["sampling_rate"])
 
 # COMMAND ----------
 
+# transcribe the audio by sending api request to the endpoint
 score_model(pd.DataFrame({"audio":sample["array"], "sampling_rate": sample["sampling_rate"]}))
-
-# COMMAND ----------
-
-
