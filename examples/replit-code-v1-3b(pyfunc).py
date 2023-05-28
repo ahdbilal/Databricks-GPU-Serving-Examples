@@ -41,7 +41,7 @@ class Replit(mlflow.pyfunc.PythonModel):
         # Encode the input and generate prediction
         encoded_input = self.tokenizer.encode(message, return_tensors='pt').to('cuda')
         output = self.model.generate(encoded_input, max_length=max_length, do_sample=True,
-                                     temperature=temperature, num_return_sequences=num_return_sequences, eos_token_id=eos_token_id)
+                                     temperature=temperature, num_return_sequences=1, eos_token_id=eos_token_id)
 
         # Decode the prediction to text
         generated_text = self.tokenizer.decode(output[0], skip_special_tokens=True, clean_up_tokenization_spaces=False)
@@ -57,7 +57,7 @@ from mlflow.types import DataType, Schema, ColSpec
 input_schema = Schema([
     ColSpec(DataType.string, "message"), 
     ColSpec(DataType.double, "temperature"), 
-    ColSpec(DataType.long, "max_tokens")])
+    ColSpec(DataType.long, "max_length")])
 output_schema = Schema([ColSpec(DataType.string)])
 signature = ModelSignature(inputs=input_schema, outputs=output_schema)
 
@@ -65,7 +65,7 @@ signature = ModelSignature(inputs=input_schema, outputs=output_schema)
 input_example=pd.DataFrame({
             "message":["def fibonacci(n): "], 
             "temperature": [0.5],
-            "max_tokens": [100]})
+            "max_length": [100]})
 
 # Log the model with its details such as artifacts, pip requirements and input example
 with mlflow.start_run() as run:  
@@ -94,5 +94,9 @@ loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}
 # COMMAND ----------
 
 # Make a prediction using the loaded model
-input_example=pd.DataFrame({"message":["def fibonacci(n): "], "max_length": [100], "temperature": [0.2], "num_return_sequences": [1]})
+input_example=pd.DataFrame({"message":["def fibonacci(n): "], "max_length": [100], "temperature": [0.2]})
 loaded_model.predict(input_example)
+
+# COMMAND ----------
+
+
