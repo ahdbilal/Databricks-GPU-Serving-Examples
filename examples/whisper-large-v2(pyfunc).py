@@ -94,8 +94,8 @@ import json
 import matplotlib.pyplot as plt
 
 # define parameters at the start
-URL = "https://e2-dogfood.staging.cloud.databricks.com/serving-endpoints/whisper-tiny/invocations"
-DATABRICKS_TOKEN = "dapi86276ae44d3800097e71266208640ac8"
+URL = ""
+DATABRICKS_TOKEN = ""
 INPUT_EXAMPLE = pd.DataFrame({"prompt":["a photo of an astronaut riding a horse on water"]})
 
 def score_model(dataset, url=URL, databricks_token=DATABRICKS_TOKEN):
