@@ -10,10 +10,17 @@ Welcome to this GitHub repository. Here, we provide example scripts to deploy di
 | Speech-to-Text with whisper-large-v2 | [link to model](https://huggingface.co/openai/whisper-large-v2) | [link to script](examples/whisper-large-v2(pyfunc).py)|
 | Code Completion with replit-code-v1-3b | [link to model](https://huggingface.co/replit/replit-code-v1-3b) | [link to script](examples/replit-code-v1-3b(pyfunc).py) |
 
+## Requirements
+Before you start, please ensure you meet the following requirements:
+
+- Ensure that you have Nvidia A10/A100 GPUs to run the script.
+
+- Ensure that you have MLflow 2.3+ (MLR 13.1 beta) installed.
+
+- This process requires GPU model serving to deploy the models. For more information on GPU model serving, contact the Databricks team.
+
 ## How to Use
-Clone this repository and navigate to the desired script file. Follow the instructions within the script to deploy the model. 
-- Note that this requires GPU model serving. For more information on GPU model serving, reach out to the Databricks team.
-- We recommend running the script on A10/A100 Nvidia Instances
+Clone this repository and navigate to the desired script file. Follow the instructions within the script to deploy the model, ensuring you meet the requirements listed above.
 
 ## Contribution
 Feel free to contribute to this project by forking this repo and creating pull requests. If you encounter any issues or have any questions, create an issue on this repo, and we'll try our best to respond in a timely manner.
