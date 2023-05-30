@@ -17,7 +17,7 @@ Before you start, please ensure you meet the following requirements:
 
 - Ensure that you have MLflow 2.3+ (MLR 13.1 beta) installed.
 
-- This process requires GPU model serving to deploy the models. For more information on GPU model serving, contact the Databricks team.
+- Deployment requires GPU model serving. For more information on GPU model serving, contact the Databricks team.
 
 ## How to Use
 Clone this repository and navigate to the desired script file. Follow the instructions within the script to deploy the model, ensuring you meet the requirements listed above.
