@@ -1,11 +1,11 @@
 # Databricks notebook source
+!pip install py3nvml
 import pandas as pd
 import numpy as np
 import transformers
 import mlflow
 import torch
 import random
-!pip install py3nvml
 import py3nvml
 
 # COMMAND ----------
@@ -32,7 +32,8 @@ class BertSentimentClassifier(mlflow.pyfunc.PythonModel):
         with torch.no_grad():
             output = self.model(encoded_input)[0]
             _, prediction = torch.max(output, dim=1)
-
+        
+        #Check GPU memory usage and utilization rates and print the results if a random condition is met.
         if random.random() < 0.10:
             py3nvml.py3nvml.nvmlInit()
             device = py3nvml.py3nvml.nvmlDeviceGetHandleByIndex(0)
@@ -74,7 +75,7 @@ with mlflow.start_run() as run:
 # Register model in MLflow Model Registry
 result = mlflow.register_model(
     "runs:/"+run.info.run_id+"/model",
-    "bert-sentiment-classifier"
+    "bert-base-uncased-imdb"
 )
 
 # COMMAND ----------

@@ -4,6 +4,8 @@ import numpy as np
 import transformers
 import mlflow
 import torch
+!pip install py3nvml
+import py3nvml
 
 # COMMAND ----------
 
@@ -67,6 +69,13 @@ class Dolly(mlflow.pyfunc.PythonModel):
         prompt_length = len(self.tokenizer.encode(prompt, return_tensors='pt')[0])
         generated_response = self.tokenizer.decode(output[0][prompt_length:], skip_special_tokens=True)
 
+        py3nvml.py3nvml.nvmlInit()
+        self.handle = py3nvml.py3nvml.nvmlDeviceGetHandleByIndex(0)
+        info = py3nvml.py3nvml.nvmlDeviceGetMemoryInfo(self.handle)
+        util = py3nvml.py3nvml.nvmlDeviceGetUtilizationRates(self.handle)
+        print(f"Percentage of GPU memory used: {info.used / info.total * 100:.2f}%, GPU Utilization: {util.gpu:.2f}%", flush=True)
+        py3nvml.py3nvml.nvmlShutdown()
+
         return generated_response
 
 # COMMAND ----------
@@ -94,7 +103,7 @@ with mlflow.start_run() as run:
         "model",
         python_model=Dolly(),
         artifacts={'repository' : snapshot_location},
-        pip_requirements=["torch", "transformers", "accelerate"],
+        pip_requirements=["torch", "transformers", "accelerate", "py3nvml"],
         input_example=input_example,
         signature=signature,
     )
@@ -105,7 +114,7 @@ with mlflow.start_run() as run:
 # Register model in MLflow Model Registry
 result = mlflow.register_model(
     "runs:/"+run.info.run_id+"/model",
-    "dolly-v2-3b"
+    "dolly-with-gpu-monitoring"
 )
 # Note: Due to the large size of the model, the registration process might take longer than the default maximum wait time of 300 seconds. MLflow could throw an exception indicating that the max wait time has been exceeded. Don't worry if this happens - it's not necessarily an error. Instead, you can confirm the registration status of the model by directly checking the model registry. This exception is merely a time-out notification and does not necessarily imply a failure in the registration process.
 
@@ -119,3 +128,7 @@ loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}
 # Make a prediction using the loaded model
 input_example=pd.DataFrame({"prompt":["what is ML?"], "temperature": [0.5],"max_tokens": [100]})
 loaded_model.predict(input_example)
+
+# COMMAND ----------
+
+
