@@ -15,6 +15,7 @@ Welcome to this GitHub repository. Here, we provide example scripts to deploy di
 | Task | Example Script | 
 |-------| ---------------|
 | Calling Databricks endpoints with langchain | [link to script](examples/langchain.py)
+| Measuring GPU Utilization| [link to script](examples/measuring-GPU-utilization.py)
 
 ## Requirements
 Before you start, please ensure you meet the following requirements:
