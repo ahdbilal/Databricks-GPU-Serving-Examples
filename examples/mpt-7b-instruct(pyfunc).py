@@ -60,12 +60,12 @@ class MPT(mlflow.pyfunc.PythonModel):
         """
         This method generates prediction for the given input.
         """
-        message = model_input["message"][0]
+        prompt = model_input["prompt"][0]
         temperature = model_input.get("temperature", [1.0])[0]
         max_tokens = model_input.get("max_tokens", [100])[0]
 
         # Build the prompt
-        prompt = self._build_prompt(message)
+        prompt = self._build_prompt(prompt)
 
         # Encode the input and generate prediction
         encoded_input = self.tokenizer.encode(prompt, return_tensors='pt').to('cuda')
@@ -87,7 +87,7 @@ from mlflow.types import DataType, Schema, ColSpec
 
 # Define input and output schema
 input_schema = Schema([
-    ColSpec(DataType.string, "message"), 
+    ColSpec(DataType.string, "prompt"), 
     ColSpec(DataType.double, "temperature"), 
     ColSpec(DataType.long, "max_tokens")])
 output_schema = Schema([ColSpec(DataType.string)])
@@ -95,7 +95,7 @@ signature = ModelSignature(inputs=input_schema, outputs=output_schema)
 
 # Define input example
 input_example=pd.DataFrame({
-            "message":["what is ML?"], 
+            "prompt":["what is ML?"], 
             "temperature": [0.5],
             "max_tokens": [100]})
 
@@ -106,7 +106,7 @@ with mlflow.start_run() as run:
         python_model=MPT(),
         artifacts={'repository' : snapshot_location},
         pip_requirements=["torch", "transformers", "accelerate", "einops", "sentencepiece"],
-        input_example=pd.DataFrame({"message":["what is ML?"], "temperature": [0.5],"max_tokens": [100]}),
+        input_example=pd.DataFrame({"prompt":["what is ML?"], "temperature": [0.5],"max_tokens": [100]}),
         signature=signature
     )
 
@@ -127,7 +127,7 @@ loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}
 # COMMAND ----------
 
 # Make a prediction using the loaded model
-input_example=pd.DataFrame({"message":["what is ML?"], "temperature": [0.5],"max_tokens": [100]})
+input_example=pd.DataFrame({"prompt":["what is ML?"], "temperature": [0.5],"max_tokens": [100]})
 loaded_model.predict(input_example)
 
 # COMMAND ----------
