@@ -11,6 +11,11 @@ Welcome to this GitHub repository. Here, we provide example scripts to deploy di
 | Speech-to-Text with whisper-large-v2 | [link to model](https://huggingface.co/openai/whisper-large-v2) | [link to script](examples/whisper-large-v2(pyfunc).py)|
 | Code Completion with replit-code-v1-3b | [link to model](https://huggingface.co/replit/replit-code-v1-3b) | [link to script](examples/replit-code-v1-3b(pyfunc).py) |
 
+### Other Examples
+| Task | Example Script | 
+|-------| ---------------|
+| Calling Databricks endpoints with langchain | [link to script](examples/langchain.py)
+
 ## Requirements
 Before you start, please ensure you meet the following requirements:
 
