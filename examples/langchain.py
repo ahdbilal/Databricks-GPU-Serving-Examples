@@ -1,4 +1,5 @@
 # Databricks notebook source
+# For more details, see this https://python.langchain.com/en/latest/modules/models/llms/integrations/databricks.html?highlight=databricks#wrapping-a-serving-endpoint
 !pip install --upgrade langchain
 dbutils.library.restartPython()
 
