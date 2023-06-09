@@ -4,8 +4,6 @@ import numpy as np
 import transformers
 import mlflow
 import torch
-!pip install py3nvml
-import py3nvml
 
 # COMMAND ----------
 
@@ -69,13 +67,6 @@ class Dolly(mlflow.pyfunc.PythonModel):
         prompt_length = len(self.tokenizer.encode(prompt, return_tensors='pt')[0])
         generated_response = self.tokenizer.decode(output[0][prompt_length:], skip_special_tokens=True)
 
-        py3nvml.py3nvml.nvmlInit()
-        self.handle = py3nvml.py3nvml.nvmlDeviceGetHandleByIndex(0)
-        info = py3nvml.py3nvml.nvmlDeviceGetMemoryInfo(self.handle)
-        util = py3nvml.py3nvml.nvmlDeviceGetUtilizationRates(self.handle)
-        print(f"Percentage of GPU memory used: {info.used / info.total * 100:.2f}%, GPU Utilization: {util.gpu:.2f}%", flush=True)
-        py3nvml.py3nvml.nvmlShutdown()
-
         return generated_response
 
 # COMMAND ----------
@@ -103,7 +94,7 @@ with mlflow.start_run() as run:
         "model",
         python_model=Dolly(),
         artifacts={'repository' : snapshot_location},
-        pip_requirements=["torch", "transformers", "accelerate", "py3nvml"],
+        pip_requirements=["torch", "transformers", "accelerate"],
         input_example=input_example,
         signature=signature,
     )
