@@ -3,7 +3,7 @@ Welcome to this GitHub repository. Here, we provide example scripts to deploy di
 
 | Model | Hugging Face Model Repo | Deployment Script |
 |-------|------------------------|-------------------|
-| Chat Completition LLM with llama-2-7b | [link to model](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) | [link to script](examples/llama-2-7b-hf(pyfunc).py) |
+| Chat Completition LLM with llama-2-7b | [link to model](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) | [link to script](examples/llama-2-7b-chat-hf.py) |
 | Instruction-Tuned LLM with mpt-7b-instruct | [link to model](https://huggingface.co/mosaicml/mpt-7b-instruct) | [link to script](examples/mpt-7b-instruct(pyfunc).py) |
 | Instruction-Tuned LLM with falcon-7b-instruct | [link to model](https://huggingface.co/tiiuae/falcon-7b-instruct) | [link to script](examples/falcon-7b-instruct(pyfunc).py) |
 | Instruction-Tuned LLM with databricks-dolly | [link to model](https://huggingface.co/databricks/dolly-v2-7b) | [link to script](examples/dolly-v2(pyfunc).py) |
