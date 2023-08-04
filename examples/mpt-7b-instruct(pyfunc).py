@@ -11,6 +11,7 @@ from huggingface_hub import snapshot_download
 # Download the MPT model snapshot from huggingface
 snapshot_location = snapshot_download(repo_id="mosaicml/mpt-7b-instruct")
 
+
 # COMMAND ----------
 
 class MPT(mlflow.pyfunc.PythonModel):
@@ -34,9 +35,8 @@ class MPT(mlflow.pyfunc.PythonModel):
             context.artifacts['repository'], 
             config=config,
             torch_dtype=torch.bfloat16,
+            device_map="auto",
             trust_remote_code=True)
-        self.model.to(device='cuda')
-        
         self.model.eval()
 
     def _build_prompt(self, instruction):
@@ -68,7 +68,7 @@ class MPT(mlflow.pyfunc.PythonModel):
         prompt = self._build_prompt(prompt)
 
         # Encode the input and generate prediction
-        encoded_input = self.tokenizer.encode(prompt, return_tensors='pt').to('cuda')
+        encoded_input = self.tokenizer.encode(prompt, return_tensors='pt')
         output = self.model.generate(encoded_input, do_sample=True, temperature=temperature, max_new_tokens=max_tokens)
     
         # Decode the prediction to text
@@ -129,7 +129,3 @@ loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}
 # Make a prediction using the loaded model
 input_example=pd.DataFrame({"prompt":["what is ML?"], "temperature": [0.5],"max_tokens": [100]})
 loaded_model.predict(input_example)
-
-# COMMAND ----------
-
-
