@@ -25,8 +25,10 @@ class Replit(mlflow.pyfunc.PythonModel):
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(
             context.artifacts['repository'], trust_remote_code=True)
         self.model = transformers.AutoModelForCausalLM.from_pretrained(
-            context.artifacts['repository'], trust_remote_code=True)
-        self.model.to(device='cuda:0', dtype=torch.bfloat16)
+            context.artifacts['repository'],
+            dtype=torch.bfloat16 
+            device_map="auto"
+            trust_remote_code=True)
         self.model.eval()
 
     def predict(self, context, model_input):
@@ -39,7 +41,7 @@ class Replit(mlflow.pyfunc.PythonModel):
         eos_token_id = self.tokenizer.eos_token_id
 
         # Encode the input and generate prediction
-        encoded_input = self.tokenizer.encode(message, return_tensors='pt').to('cuda')
+        encoded_input = self.tokenizer.encode(message, return_tensors='pt')
         output = self.model.generate(encoded_input, max_length=max_length, do_sample=True,
                                      temperature=temperature, num_return_sequences=1, eos_token_id=eos_token_id)
 
