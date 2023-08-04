@@ -22,8 +22,7 @@ class Llama2(mlflow.pyfunc.PythonModel):
         self.tokenizer = LlamaTokenizerFast.from_pretrained(
           context.artifacts['repository'])
 
-        self.model = LlamaForCausalLM.from_pretrained(context.artifacts['repository'], torch_dtype=torch.float16, low_cpu_mem_usage=True)
-        self.model.to(device='cuda')
+        self.model = LlamaForCausalLM.from_pretrained(context.artifacts['repository'], torch_dtype=torch.float16, low_cpu_mem_usage=True, device_map='auto')
         
         self.model.eval()
 
