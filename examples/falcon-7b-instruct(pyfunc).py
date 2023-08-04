@@ -10,12 +10,12 @@ print(torch.__version__)
 # COMMAND ----------
 
 from huggingface_hub import snapshot_download
-# Download the Dolly model snapshot from huggingface
+# Download the Falcon model snapshot from huggingface
 snapshot_location = snapshot_download(repo_id="tiiuae/falcon-7b-instruct",  ignore_patterns="coreml/*")
 
 # COMMAND ----------
 
-class Dolly(mlflow.pyfunc.PythonModel):
+class Falcon(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
         """
         This method initializes the tokenizer and language model
@@ -97,7 +97,7 @@ input_example=pd.DataFrame({
 with mlflow.start_run() as run:  
     mlflow.pyfunc.log_model(
         "model",
-        python_model=Dolly(),
+        python_model=Falcon(),
         artifacts={'repository' : snapshot_location},
         pip_requirements=["torch", "transformers", "accelerate", "einops","sentencepiece"],
         input_example=input_example,
