@@ -41,7 +41,7 @@ class Replit(mlflow.pyfunc.PythonModel):
         eos_token_id = self.tokenizer.eos_token_id
 
         # Encode the input and generate prediction
-        encoded_input = self.tokenizer.encode(message, return_tensors='pt')
+        encoded_input = self.tokenizer.encode(message, return_tensors='pt').to("cuda")
         output = self.model.generate(encoded_input, max_length=max_length, do_sample=True,
                                      temperature=temperature, num_return_sequences=1, eos_token_id=eos_token_id)
 
