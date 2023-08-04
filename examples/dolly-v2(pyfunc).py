@@ -57,7 +57,7 @@ class Dolly(mlflow.pyfunc.PythonModel):
         prompt = self._build_prompt(prompt)
 
         # Encode the input and generate prediction
-        encoded_input = self.tokenizer.encode(prompt, return_tensors='pt')
+        encoded_input = self.tokenizer.encode(prompt, return_tensors='pt').to("cuda")
         output = self.model.generate(encoded_input, do_sample=True, temperature=temperature, max_new_tokens=max_tokens)
     
         # Decode the prediction to text
