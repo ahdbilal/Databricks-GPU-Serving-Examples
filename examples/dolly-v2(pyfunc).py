@@ -9,7 +9,7 @@ import torch
 
 from huggingface_hub import snapshot_download
 # Download the Dolly model snapshot from huggingface
-snapshot_location = snapshot_download(repo_id="databricks/dolly-v2-3b")
+snapshot_location = snapshot_download(repo_id="databricks/dolly-v2-7b")
 
 # COMMAND ----------
 
@@ -25,7 +25,7 @@ class Dolly(mlflow.pyfunc.PythonModel):
         self.model = transformers.AutoModelForCausalLM.from_pretrained(
             context.artifacts['repository'], torch_dtype=torch.bfloat16,
             low_cpu_mem_usage=True, device_map="auto",
-            pad_token_id=self.tokenizer.eos_token_id).to('cuda')
+            pad_token_id=self.tokenizer.eos_token_id)
         self.model.eval()
 
     def _build_prompt(self, instruction):
@@ -57,7 +57,7 @@ class Dolly(mlflow.pyfunc.PythonModel):
         prompt = self._build_prompt(prompt)
 
         # Encode the input and generate prediction
-        encoded_input = self.tokenizer.encode(prompt, return_tensors='pt').to('cuda')
+        encoded_input = self.tokenizer.encode(prompt, return_tensors='pt')
         output = self.model.generate(encoded_input, do_sample=True, temperature=temperature, max_new_tokens=max_tokens)
     
         # Decode the prediction to text
@@ -105,7 +105,7 @@ with mlflow.start_run() as run:
 # Register model in MLflow Model Registry
 result = mlflow.register_model(
     "runs:/"+run.info.run_id+"/model",
-    "dolly-v2-3b"
+    "bilal-dolly-v2-7b"
 )
 # Note: Due to the large size of the model, the registration process might take longer than the default maximum wait time of 300 seconds. MLflow could throw an exception indicating that the max wait time has been exceeded. Don't worry if this happens - it's not necessarily an error. Instead, you can confirm the registration status of the model by directly checking the model registry. This exception is merely a time-out notification and does not necessarily imply a failure in the registration process.
 
@@ -119,7 +119,3 @@ loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}
 # Make a prediction using the loaded model
 input_example=pd.DataFrame({"prompt":["what is ML?"], "temperature": [0.5],"max_tokens": [100]})
 loaded_model.predict(input_example)
-
-# COMMAND ----------
-
-
