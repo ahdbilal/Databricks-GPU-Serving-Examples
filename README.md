@@ -2,7 +2,7 @@
 Welcome to this GitHub repository. Here, we provide example scripts to deploy different Huggingface models on Databricks Model Serving. These examples can also guide you in deploying other models following similar steps.
 
 ## Getting Started Notebooks
-We suggest beginning with the following script. The first notebook uses the "mlflow transformer" flavor to demonstrate the ease and simplicity of deploying models. The second notebook uses "mlflow pyfunc" to illustrate how you can pass additional parameters, pre-processing, or post-processing with the deployed models.
+We suggest beginning with the following script. The first notebook uses the "mlflow transformer" flavor to demonstrate the ease and simplicity of deploying models. The second notebook uses "mlflow pyfunc" to illustrate how you can pass additional parameters or can add pre-processing/post-processing with the deployed models.
 - [GPT2](https://huggingface.co/gpt2) deployment using [**mlflow transformer flavor**](examples/gpt2(mlflow.transformers).py)
 - [GPT2](https://huggingface.co/gpt2) deployment with [**mlflow pyfunc**](examples/gpt2(pyfunc).py)
 
