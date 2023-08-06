@@ -78,7 +78,7 @@ with mlflow.start_run() as run:
 # Register model in MLflow Model Registry
 result = mlflow.register_model(
     "runs:/"+run.info.run_id+"/model",
-    "bilall-gpt2"
+    "gpt2"
 )
 
 # COMMAND ----------
