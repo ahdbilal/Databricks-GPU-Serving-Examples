@@ -4,7 +4,7 @@ Welcome to this GitHub repository. Here, we provide example scripts to deploy di
 
 ## Getting Started Notebooks
 We suggest beginning with the following script. The first notebook uses the "mlflow transformer" flavor to demonstrate the ease and simplicity of deploying models. The second notebook uses "mlflow pyfunc" to illustrate how you can pass additionalparameters, pre-processing, or post-processing with the deployed models.
-- [GPT2](https://huggingface.co/gpt2) deployment using [**mlflow transformer flavor**](examples/gpt2(mlflow.transformer).py)
+- [GPT2](https://huggingface.co/gpt2) deployment using [**mlflow transformer flavor**](examples/gpt2(mlflow.transformers).py)
 - [GPT2](https://huggingface.co/gpt2) deployment with [**mlflow pyfunc**](examples/gpt2(pyfunc).py)
 
 ## Common Models Deployment Scripts
