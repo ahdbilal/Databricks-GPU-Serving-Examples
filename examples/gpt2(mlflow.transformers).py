@@ -34,7 +34,7 @@ with mlflow.start_run():
         transformers_model=text_generation_pipeline,
         artifact_path="my_sentence_generator",
         inference_config=inference_config,
-        registered_model_name='bilal-gpt2',
+        registered_model_name='gpt2',
         input_example=input_example,
         signature=signature,
     )
