@@ -6,6 +6,11 @@ We suggest beginning with the following script. The first notebook uses the "mlf
 - [GPT2](https://huggingface.co/gpt2) deployment using [**mlflow transformer flavor**](examples/gpt2(mlflow.transformers).py)
 - [GPT2](https://huggingface.co/gpt2) deployment with [**mlflow pyfunc**](examples/gpt2(pyfunc).py)
 
+
+## Optimized LLM Serving
+Optimized LLM Serving enables you to take state of the art OSS LLMs and deploy them on Databricks Model Serving with automatic optimizations for improved latency and throughput on GPUs. Currently, we support optimizing the Mosaic MPT model and will continue introducing more models with optimization support.
+- [Optimized LLM deployment with mpt-instruct](examples/Optimized-LLM-Serving-Example) 
+
 ## Scripts for Deploying Popular Models
 
 | Use Case | Model | Model Repo | Deployment Script |
