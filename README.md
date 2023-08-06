@@ -13,18 +13,18 @@ Optimized LLM Serving enables you to take state of the art OSS LLMs and deploy t
 
 ## Scripts for Deploying Popular Models
 
-| Use Case | Model | Model Repo | Deployment Script |
-|-------|-------|------------------------|-------------------|
-|Text generation following instructions|llama-2 | [link to model](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) | [link to script](examples/llama-2-7b-chat-hf.py) |
-|Text generation following instructions|mpt-instruct | [link to model](https://huggingface.co/mosaicml/mpt-7b-instruct) | [link to script](examples/Optimized-LLM-Serving-Example.py) |
-|Text generation following instructions|falcon-instruct | [link to model](https://huggingface.co/tiiuae/falcon-7b-instruct) | [link to script](examples/falcon-7b-instruct(pyfunc).py) |
-|Text generation following instructions|databricks-dolly | [link to model](https://huggingface.co/databricks/dolly-v2-7b) | [link to script](examples/dolly-v2(pyfunc).py) |
-|Text generation following instructions|flan-t5-xl | [link to model](https://huggingface.co/google/flan-t5-xl) | [link to script](examples/flan-t5-xl.py)|
-|Text Embeddings|e5-large-v2 | [link to model](https://huggingface.co/intfloat/e5-large-v2) | [link to script](examples/e5-large-v2(pyfunc).py) |
-|Transcription (speech to text)|whisper-large-v2 | [link to model](https://huggingface.co/openai/whisper-large-v2) | [link to script](examples/whisper-large-v2(pyfunc).py)|
-|Image generation|stable-diffusion-2-1 | [link to model](https://huggingface.co/stabilityai/stable-diffusion-2-1) | [link to script](examples/stable-diffusion-2-1(pyfunc).py)|
-|Code generation|replit-code-v1-3b | [link to model](https://huggingface.co/replit/replit-code-v1-3b) | [link to script](examples/replit-code-v1-3b(pyfunc).py) |
-|Simple Sentiment Analysis|bert-base-uncased-imdb | [link to model](https://huggingface.co/textattack/bert-base-uncased-imdb) | [link to script](examples/bert-sentiment(pyfunc).py) |
+| Use Case | Model | Deployment Script |
+|-------|-------|-------------------|
+|Text generation following instructions|[llama-2](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) | [link to script](examples/llama-2-7b-chat-hf.py) |
+|Text generation following instructions|[mpt-instruct](https://huggingface.co/mosaicml/mpt-7b-instruct) | [link to script](examples/Optimized-LLM-Serving-Example.py) |
+|Text generation following instructions|[falcon-instruct](https://huggingface.co/tiiuae/falcon-7b-instruct) | [link to script](examples/falcon-7b-instruct(pyfunc).py) |
+|Text generation following instructions|[databricks-dolly](https://huggingface.co/databricks/dolly-v2-7b) | [link to script](examples/dolly-v2(pyfunc).py) |
+|Text generation following instructions|[flan-t5-xl](https://huggingface.co/google/flan-t5-xl) | [link to script](examples/flan-t5-xl.py)|
+|Text Embeddings|[e5-large-v2](https://huggingface.co/intfloat/e5-large-v2) | [link to script](examples/e5-large-v2(pyfunc).py) |
+|Transcription (speech to text)|[whisper-large-v2](https://huggingface.co/openai/whisper-large-v2) | [link to script](examples/whisper-large-v2(pyfunc).py)|
+|Image generation|[stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1) | [link to script](examples/stable-diffusion-2-1(pyfunc).py)|
+|Code generation|[replit-code-v1-3b](https://huggingface.co/replit/replit-code-v1-3b) | [link to script](examples/replit-code-v1-3b(pyfunc).py) |
+|Simple Sentiment Analysis|[bert-base-uncased-imdb](https://huggingface.co/textattack/bert-base-uncased-imdb) | [link to script](examples/bert-sentiment(pyfunc).py) |
 
 ## Utility Examples
 | Task | Example Script | 
