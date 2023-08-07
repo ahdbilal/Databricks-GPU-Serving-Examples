@@ -26,6 +26,8 @@ Optimized LLM Serving enables you to take state of the art OSS LLMs and deploy t
 |Code generation|[replit-code-v1-3b](https://huggingface.co/replit/replit-code-v1-3b) | [link to script](examples/replit-code-v1-3b(pyfunc).py) |
 |Simple Sentiment Analysis|[bert-base-uncased-imdb](https://huggingface.co/textattack/bert-base-uncased-imdb) | [link to script](examples/bert-sentiment(pyfunc).py) |
 
+## Want to Fine Tune Models?
+Please refer to this repository for scripts that detail how to fine-tune LLMs on Databricks: https://github.com/databricks/databricks-ml-examples.
 ## Utility Examples
 | Task | Example Script | 
 |-------| ---------------|
