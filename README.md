@@ -26,7 +26,7 @@ Optimized LLM Serving enables you to take state of the art OSS LLMs and deploy t
 |Simple Sentiment Analysis|[bert-base-uncased-imdb](https://huggingface.co/textattack/bert-base-uncased-imdb) | [link to script](examples/bert-sentiment(pyfunc).py) |
 
 ## Quantizing Models
-You can quantize models to reduce the computational and memory costs of running inference by representing the weights and activations with low-precision data types like 8-bit integer (int8) instead of the 16-bit binary floating point (bfloat16). With quantization, you can 13b model on single A10 and a 7b model on T4 GPU.
+You can quantize models to reduce the computational and memory costs of running inference by representing the weights and activations with low-precision data types like 8-bit integer (int8) instead of the 16-bit binary floating point (bfloat16). With quantization, you can deploy 13b model on single A10 and a 7b model on T4 GPU.
 - [mpt-7b-instruct deployment with 8-bit quantization](examples/mpt-7b-instruct-quantized.py)
 
 ## Want to Fine Tune Models?
