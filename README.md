@@ -6,7 +6,6 @@ We suggest beginning with the following script. The first notebook uses the "mlf
 - [GPT2](https://huggingface.co/gpt2) deployment using [**mlflow transformer flavor**](examples/gpt2(mlflow.transformers).py)
 - [GPT2](https://huggingface.co/gpt2) deployment with [**mlflow pyfunc**](examples/gpt2(pyfunc).py)
 
-
 ## Optimized LLM Serving
 Optimized LLM Serving enables you to take state of the art OSS LLMs and deploy them on Databricks Model Serving with automatic optimizations for improved latency and throughput on GPUs. Currently, we support optimizing the Mosaic MPT model and will continue introducing more models with optimization support.
 - [Optimized LLM deployment with mpt-instruct](examples/Optimized-LLM-Serving-Example.py) 
@@ -25,6 +24,10 @@ Optimized LLM Serving enables you to take state of the art OSS LLMs and deploy t
 |Image generation|[stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1) | [link to script](examples/stable-diffusion-2-1(pyfunc).py)|
 |Code generation|[replit-code-v1-3b](https://huggingface.co/replit/replit-code-v1-3b) | [link to script](examples/replit-code-v1-3b(pyfunc).py) |
 |Simple Sentiment Analysis|[bert-base-uncased-imdb](https://huggingface.co/textattack/bert-base-uncased-imdb) | [link to script](examples/bert-sentiment(pyfunc).py) |
+
+## Quantizing Models
+You can quantize models to reduce the computational and memory costs of running inference by representing the weights and activations with low-precision data types like 8-bit integer (int8) instead of the 16-bit binary floating point (bfloat16). With quantization, you can 13b model on single A10 and a 7b model on T4 GPU.
+- [mpt-7b-instruct deployment with 8-bit quantization](examples/mpt-7b-instruct-quantized.py)
 
 ## Want to Fine Tune Models?
 Please refer to this repository for scripts that detail how to fine-tune LLMs on Databricks: https://github.com/databricks/databricks-ml-examples.
