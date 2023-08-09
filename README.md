@@ -47,6 +47,17 @@ Before you start, please ensure you meet the following requirements:
 
 - Deployment requires GPU model serving. For more information on GPU model serving, contact the Databricks team.
 
+- Here are some general guidelines for determining GPU requirements when serving a model.
+
+| GPU Type  | GPU Memory | Approx Max Model Size (bfloat) | Approx Max Model Size (int8) |
+|-----------|------------|---------------------------------------|-------------------------------------|
+| T4        | 16 GB      | 3b                                    | 7b                                  |
+| single A10| 24 GB      | 7b                                    | 20b                                 |
+| 4x A10    | 96 GB      | 30b                                   | 60b                                 |
+| A100      | 80 GB      | 30b                                   | 60b                                 |
+| 8xA100    | 320 GB     | 70b                                   |                                     |
+
+
 ## How to Use
 Clone this repository and navigate to the desired script file. Follow the instructions within the script to deploy the model, ensuring you meet the requirements listed above.
 
