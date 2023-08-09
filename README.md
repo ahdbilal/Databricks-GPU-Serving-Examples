@@ -52,7 +52,7 @@ Before you start, please ensure you meet the following requirements:
 | GPU Type  | GPU Memory | Approx Max Model Size (bfloat) | Approx Max Model Size (int8) |
 |-----------|------------|---------------------------------------|-------------------------------------|
 | T4        | 16 GB      | 3b                                    | 7b                                  |
-| single A10| 24 GB      | 7b                                    | 20b                                 |
+| A10       | 24 GB      | 7b                                    | 20b                                 |
 | 4x A10    | 96 GB      | 30b                                   | 60b                                 |
 | A100      | 80 GB      | 30b                                   | 60b                                 |
 | 8xA100    | 320 GB     | 70b                                   |                                     |
