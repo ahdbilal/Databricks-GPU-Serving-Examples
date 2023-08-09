@@ -45,8 +45,8 @@ Before you start, please ensure you meet the following requirements:
 
 - Ensure that you have MLflow 2.3+ (MLR 13.1 beta) installed.
 
-- Deployment requires GPU model serving. For more information on GPU model serving, contact the Databricks team.
-
+- Deployment requires GPU model serving. For more information on GPU model serving, contact the Databricks team or sign up [here](https://docs.google.com/forms/d/1-GWIlfjlIaclqDz6BPODI2j1Xg4f4WbFvBXyebBpN-Y/edit).
+  
 - Here are some general guidelines for determining GPU requirements when serving a model.
 
 | GPU Type  | GPU Memory | Approx Max Model Size (bfloat) | Approx Max Model Size (int8) |
