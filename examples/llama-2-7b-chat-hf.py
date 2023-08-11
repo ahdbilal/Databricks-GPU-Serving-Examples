@@ -8,7 +8,8 @@ import torch
 
 # COMMAND ----------
 
-repository = "meta-llama/Llama-2-7b-chat-hf"
+model = "meta-llama/Llama-2-7b-chat-hf"
+repository = snapshot_download(repo_id=model, ignore_patterns="*.safetensors")
 
 # COMMAND ----------
 
