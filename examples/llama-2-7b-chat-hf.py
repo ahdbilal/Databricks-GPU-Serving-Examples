@@ -105,7 +105,7 @@ with mlflow.start_run() as run:
         artifacts={'repository' : repository},
         pip_requirements=["torch", "transformers", "accelerate"],
         input_example=pd.DataFrame({"prompt":["what is ML?"],"max_tokens": [80]}),
-        registered_model_name='bilal-llama2-7b'
+        registered_model_name='llama2-7b'
     )
 
 # COMMAND ----------
