@@ -55,7 +55,7 @@ Before you start, please ensure you meet the following requirements:
 | A10       | 24 GB      | 7b                                    | 20b                                 |
 | 4x A10    | 96 GB      | 30b                                   | 60b                                 |
 | A100      | 80 GB      | 30b                                   | 60b                                 |
-| 8xA100    | 320 GB     | 70b                                   |                                     |
+| 4xA100    | 320 GB     | 100b                                  |                                     |
 
 
 ## How to Use
