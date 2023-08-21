@@ -1,7 +1,7 @@
 # Databricks notebook source
 # Databricks notebook source
 !pip install --upgrade transformers
-!pip install --upgrade accelerate
+!pip install --upgrade accelerator
 !pip install --upgrade mlflow
 dbutils.library.restartPython()
 
