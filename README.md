@@ -28,7 +28,7 @@ Optimized LLM Serving enables you to take state of the art OSS LLMs and deploy t
 ## Quantizing Models
 You can quantize models to reduce the computational and memory costs of running inference by representing the weights and activations with low-precision data types like 8-bit integer (int8) instead of the 16-bit binary floating point (bfloat16). With quantization, you can deploy 13b model on single A10 and a 7b model on T4 GPU.
 
-**Note: Quantizing the model can degrade model performance and maynot necessarily make it faster.**
+**Note: Quantizing the model can degrade model performance and may not necessarily make it faster.**
 
 - [mpt-7b-instruct deployment with 8-bit quantization](examples/mpt-7b-instruct-quantized.py)
 
