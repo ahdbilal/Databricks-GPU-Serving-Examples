@@ -205,4 +205,8 @@ print("Reponse text:", response.text)
 from pyspark.sql import SparkSession
 spark = SparkSession.builder.getOrCreate()
 df = spark.sql(f"select * from delta.`{dbfs_table_path}/{endpoint_name}` limit 1000")
-df.show()
+display(df)
+
+# COMMAND ----------
+
+
