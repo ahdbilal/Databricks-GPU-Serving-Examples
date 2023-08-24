@@ -15,6 +15,7 @@ from mlflow.tracking import MlflowClient
 # Define constants
 endpoint_name = "CallEndpoint" # endpoint name of the cpu endpoint
 model_name = "CPUWrapper" # model name that will be deployed to cpu endpoint
+dbfs_table_path = "dbfs:/llm" # location of the inference table
 os.environ["URI"] = dbutils.secrets.get(scope="llm", key="endpoint_uri") # endpoint uri of the gpu endpoint
 os.environ["TOKEN"] = dbutils.secrets.get(scope="llm", key="endpoint_token") # token to access the gpu endpoint
 
@@ -83,30 +84,66 @@ loaded_model.predict(input_example)
 
 # COMMAND ----------
 
-# Deploy the model to an endpoint
-client = MlflowClient()
+# Create an endpoint with infernece table
 API_ROOT = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiUrl().get()
 API_TOKEN = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()
+client = MlflowClient()
 url = f"{API_ROOT}/api/2.0/serving-endpoints"
 headers = {"Authorization": f"Bearer {API_TOKEN}", "Content-Type": "application/json"}
-payload = {
-    "name": endpoint_name,
-    "config":{
-      "served_models": [{
-            "model_name": model_name,
-            "model_version": client.get_registered_model(model_name).latest_versions[0].version,
-            "workload_size": "Small",
-            "scale_to_zero_enabled": "True",
-            "environment_vars": {
-              "URI": "{{secrets/llm/endpoint_uri}}",
-              "TOKEN": "{{secrets/llm/endpoint_token}}"
-              }
 
-      }]
+data = {
+    "name": endpoint_name,
+    "config": {
+        "served_models": [
+            {
+                "model_name": model_name,
+                "model_version": client.get_registered_model(model_name).latest_versions[0].version,
+                "workload_size": "Small",
+                "scale_to_zero_enabled": True,
+                "environment_vars": {
+                  "URI": "{{secrets/llm/endpoint_uri}}",
+                  "TOKEN": "{{secrets/llm/endpoint_token}}"
+                }
+            }
+        ]
+    },
+    "inference_table_config": {
+        "dbfs_destination_path": dbfs_table_path
     }
 }
-response = requests.post(url, headers=headers, data=json.dumps(payload))
-response.text
+
+headers = {
+    "Context-Type": "text/json",
+    "Authorization": f"Bearer {API_TOKEN}"
+}
+
+response = requests.post(
+    url,
+    json=data,
+    headers=headers
+)
+print("Response status:", response.status_code)
+print("Reponse text:", response.text)
+
+# COMMAND ----------
+
+# Get endpoint status
+data = {
+    "name": endpoint_name
+}
+
+headers = {
+    "Context-Type": "text/json",
+    "Authorization": f"Bearer {API_TOKEN}"
+}
+
+response = requests.get(
+    url=f"{API_ROOT}/api/2.0/preview/serving-endpoints/{endpoint_name}",
+    json=data,
+    headers=headers
+)
+
+print(response.status_code, response.text)
 
 # COMMAND ----------
 
@@ -160,3 +197,12 @@ response = requests.post(
 
 print("Response status:", response.status_code)
 print("Reponse text:", response.text)
+
+# COMMAND ----------
+
+#Query your raw Inference Log Delta table!
+# Note: A log will arrive in your Inference Table about 5-10 minutes after the model invocation.
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+df = spark.sql(f"select * from delta.`{dbfs_table_path}/{endpoint_name}` limit 1000")
+df.show()
