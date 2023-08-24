@@ -14,7 +14,7 @@ Optimized LLM Serving enables you to take state of the art OSS LLMs and deploy t
 
 | Use Case | Model | Deployment Script |
 |-------|-------|-------------------|
-|Text generation following instructions|[llama-2](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) | [link to script](examples/llama-2-7b-chat-hf.py) |
+|Text generation following instructions|[llama-2](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) | [link to script](examples/llama2-7b-chat.py) |
 |Text generation following instructions|[mpt-instruct](https://huggingface.co/mosaicml/mpt-7b-instruct) | [link to script](examples/Optimized-LLM-Serving-Example.py) |
 |Text generation following instructions|[falcon-instruct](https://huggingface.co/tiiuae/falcon-7b-instruct) | [link to script](examples/falcon-7b-instruct(pyfunc).py) |
 |Text generation following instructions|[databricks-dolly](https://huggingface.co/databricks/dolly-v2-7b) | [link to script](examples/dolly-v2(pyfunc).py) |
