@@ -14,7 +14,7 @@ from mlflow.tracking import MlflowClient
 
 # Define constants
 endpoint_name = "CallEndpoint" # endpoint name of the cpu endpoint
-model_name = "gpt-cpu" # model name that will be deployed to cpu endpoint
+model_name = "CPUWrapper" # model name that will be deployed to cpu endpoint
 os.environ["URI"] = dbutils.secrets.get(scope="llm", key="endpoint_uri") # endpoint uri of the gpu endpoint
 os.environ["TOKEN"] = dbutils.secrets.get(scope="llm", key="endpoint_token") # token to access the gpu endpoint
 
