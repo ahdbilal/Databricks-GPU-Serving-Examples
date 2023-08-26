@@ -38,6 +38,7 @@ Please refer to this repository for scripts that detail how to fine-tune LLMs on
 | Task | Example Script | 
 |-------| ---------------|
 | Calling Databricks endpoints with langchain | [link to script](examples/langchain.py)
+| Payload logging using Inference Tables | [link to script](examples/PayloadLogging.py)
 | Measuring GPU Utilization| [link to script](examples/measuring-GPU-utilization.py)
 | Installing git Dependencies| [link to script](examples/installing-git-dependencies.py)
 
