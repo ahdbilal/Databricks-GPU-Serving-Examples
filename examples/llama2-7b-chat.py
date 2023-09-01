@@ -104,7 +104,13 @@ with mlflow.start_run() as run:
         python_model=Llama2(),
         artifacts={'repository' : repository},
         pip_requirements=["torch", "transformers", "accelerate"],
-        input_example=pd.DataFrame({"prompt":["what is ML?"],"max_tokens": [80]}),
+        input_example=pd.DataFrame(
+            {
+                "prompt": ["what is ML?"],
+                "max_new_tokens": [80],
+                "temperature": [0.7]
+            }
+        ),
         registered_model_name='llama2-7b'
     )
 
