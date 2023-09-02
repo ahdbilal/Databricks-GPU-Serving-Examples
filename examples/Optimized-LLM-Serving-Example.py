@@ -25,7 +25,9 @@
 # MAGIC
 
 # COMMAND ----------
-
+!pip install -U transformers
+!pip install -U accelerate
+!pip install -U tensorflow
 dbutils.library.restartPython()
 
 # COMMAND ----------
