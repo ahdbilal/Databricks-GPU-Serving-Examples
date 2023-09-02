@@ -43,11 +43,7 @@ class CallEndpoint(mlflow.pyfunc.PythonModel):
 
     def predict(self, context, model_input):
       #change this logic as per your requirement
-      if 'feedback' in model_input.columns:
-          model_input = model_input.drop(columns='feedback')
-          return ["Your request has been received and is being processed."]
-      else:
-        return self.score_model(model_input)['predictions']
+      return self.score_model(model_input)['predictions']
 
 # COMMAND ----------
 
@@ -57,8 +53,7 @@ class CallEndpoint(mlflow.pyfunc.PythonModel):
 input_schema = Schema([
     ColSpec(DataType.string, "prompt", optional= True), 
     ColSpec(DataType.double, "temperature", optional= True), 
-    ColSpec(DataType.long, "max_tokens", optional= True),
-    ColSpec(DataType.string, "feedback", optional= True)])
+    ColSpec(DataType.long, "max_tokens", optional= True)])
 output_schema = Schema([ColSpec(DataType.string)])
 signature = ModelSignature(inputs=input_schema, outputs=output_schema)
 
