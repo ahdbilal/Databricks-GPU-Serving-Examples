@@ -6,88 +6,46 @@ dbutils.library.restartPython()
 
 # COMMAND ----------
 
-import pandas as pd
-import numpy as np
-import transformers
 import mlflow
-import torch
-import os
+from mlflow.models import infer_signature
+from mlflow.transformers import generate_signature_output
+import numpy as np
+import pandas as pd
+from transformers import pipeline, set_seed
 
 # COMMAND ----------
 
-# Download model and package it with the model container 
-pipe = transformers.pipeline('text-generation', model='gpt2', device = 0)
-snapshot_location = os.path.expanduser("~/.cache/huggingface/pipeline-gpt2")
-os.makedirs(snapshot_location, exist_ok=True)
-pipe.save_pretrained(snapshot_location)
+task = 'text-generation'
 
-# COMMAND ----------
+text_generation_pipeline = pipeline(task, model='gpt2', device= 0)
 
-class GPT2(mlflow.pyfunc.PythonModel):
-    def load_context(self, context):
-        """
-        This method initializes the transformer
-        """
-        self.generator = transformers.pipeline('text-generation', model=context.artifacts['repository'], device = 0)
-        transformers.set_seed(42)
+# inference configuration for the model
+inference_config = {
+    "max_length": 100,
+    "temperature": 1
+}
 
-    def predict(self, context, model_input):
-        """
-        This method generates prediction for the given input.
-        """
-        prompt = model_input["prompt"][0]
-        temperature = model_input.get("temperature", [1.0])[0]
-        max_tokens = model_input.get("max_tokens", [100])[0]
-        
-        response = self.generator(prompt, max_length=max_tokens, temperature = temperature)
+# schema for the model
+input_example = pd.DataFrame(["Hello, I'm a language model,"])
+output = generate_signature_output(text_generation_pipeline, input_example)
+signature = infer_signature(input_example, output, params = inference_config)
 
-        return [response[0]['generated_text']]
-
-# COMMAND ----------
-
-from mlflow.models.signature import ModelSignature
-from mlflow.types import DataType, Schema, ColSpec
-
-# Define input and output schema
-input_schema = Schema([
-    ColSpec(DataType.string, "prompt"), 
-    ColSpec(DataType.double, "temperature"), 
-    ColSpec(DataType.long, "max_tokens")])
-output_schema = Schema([ColSpec(DataType.string)])
-signature = ModelSignature(inputs=input_schema)
-
-# Define input example
-input_example=pd.DataFrame({
-            "prompt":["Hello, I am a language Model,"], 
-            "temperature": [0.5],
-            "max_tokens": [100]})
-
-# Log the model with its details such as artifacts, pip requirements and input example
-with mlflow.start_run() as run:  
-    mlflow.pyfunc.log_model(
-        "model",
-        python_model=GPT2(),
-        artifacts={'repository' : snapshot_location},
-        pip_requirements=["torch", "transformers", "accelerate"],
+with mlflow.start_run():
+    model_info = mlflow.transformers.log_model(
+        transformers_model=text_generation_pipeline,
+        artifact_path="my_sentence_generator",
+        inference_config=inference_config,
+        registered_model_name='gpt2',
         input_example=input_example,
         signature=signature,
+        pip_requirements=["mlflow", "torch", "transformers", "accelerate", "sentencepiece"]
     )
 
 # COMMAND ----------
 
-# Register model in MLflow Model Registry
-result = mlflow.register_model(
-    "runs:/"+run.info.run_id+"/model",
-    "gpt2"
-)
-
-# COMMAND ----------
-
-# Load the logged model
-loaded_model = mlflow.pyfunc.load_model(f"models:/{result.name}/{result.version}")
-
-# COMMAND ----------
-
-# Make a prediction using the loaded model
-input_example=pd.DataFrame({"prompt":["Hello, I am a language Model,"], "temperature": [0.5],"max_tokens": [100]})
-loaded_model.predict(input_example)
+inference_config = {
+    "max_length": 20,
+    "temperature": 1
+}
+my_sentence_generator = mlflow.pyfunc.load_model(model_info.model_uri)
+my_sentence_generator.predict(pd.DataFrame(["Hello, I'm a language model,"]),params=inference_config)
