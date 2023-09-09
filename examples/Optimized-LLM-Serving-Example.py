@@ -26,6 +26,10 @@
 
 # COMMAND ----------
 
+!pip install -U transformers
+!pip install -U accelerate
+!pip install -U tensorflow
+!pip install -U mlflow
 dbutils.library.restartPython()
 
 # COMMAND ----------
@@ -33,13 +37,13 @@ dbutils.library.restartPython()
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # If you are using the latest version of transformers that has native MPT support, replace the following line with:
-# model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-7b', low_cpu_mem_usage=True)
+model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-30b', low_cpu_mem_usage=True)
 
-model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-7b', low_cpu_mem_usage=True, trust_remote_code=True)
+#model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-30b', low_cpu_mem_usage=True, trust_remote_code=True)
 
 # COMMAND ----------
 
-tokenizer = AutoTokenizer.from_pretrained("mosaicml/mpt-7b")
+tokenizer = AutoTokenizer.from_pretrained("mosaicml/mpt-30b")
 
 # COMMAND ----------
 
@@ -57,7 +61,39 @@ tokenizer = AutoTokenizer.from_pretrained("mosaicml/mpt-7b")
 # COMMAND ----------
 
 import mlflow
+from mlflow.models.signature import ModelSignature
+from mlflow.types.schema import ColSpec, Schema
+
+
+input_schema = Schema([
+    ColSpec("string", "prompt"),
+    ColSpec("double", "temperature", optional= True),
+    ColSpec("integer", "max_tokens", optional= True),
+    ColSpec("string", "stop", optional= True), # Assuming the inner arrays only contain strings
+    ColSpec("integer", "candidate_count", optional= True)
+])
+
+output_schema = Schema([
+    ColSpec("string", "prompt"),
+    ColSpec("double", "temperature", optional= True),
+    ColSpec("integer", "max_tokens", optional= True),
+    ColSpec("string", "stop", optional= True), # Assuming the inner arrays only contain strings
+    ColSpec("integer", "candidate_count", optional= True)
+])
+
+ouput_schema = Schema([
+    ColSpec('string', 'predictions')
+])
+
+# Create a model signature with just the output schema
+signature = ModelSignature(inputs = input_schema,outputs= ouput_schema)
+signature
+
+# COMMAND ----------
+
+import mlflow
 import numpy as np
+mlflow.set_registry_uri('databricks-uc')
 
 with mlflow.start_run():
     components = {
@@ -67,7 +103,8 @@ with mlflow.start_run():
     mlflow.transformers.log_model(
         transformers_model=components,
         artifact_path="mpt",
-        registered_model_name="optimized-mpt-7b-example",
+        signature=signature,
+        registered_model_name="opti-mpt-30b",
         input_example={"prompt": np.array(["Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nWhat is Apache Spark?\n\n### Response:\n"]), "max_tokens": np.array([75]), "temperature": np.array([0.0])},
         metadata = {"task": "llm/v1/completions"}
     )
@@ -81,10 +118,10 @@ with mlflow.start_run():
 
 # COMMAND ----------
 
-endpoint_name = "optimized-mpt-7b-example"
-model_name = "optimized-mpt-7b-example"
+endpoint_name = "mpt-7b-instruct "
+model_name = "mpt-7b-instruct "
 model_version = "1"
-served_model_workload_size = "Medium"
+served_model_workload_size = "Small"
 served_model_scale_to_zero = False
 
 API_ROOT = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiUrl().get()
