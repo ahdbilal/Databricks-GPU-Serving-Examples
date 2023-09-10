@@ -19,11 +19,13 @@ dbutils.library.restartPython()
 # COMMAND ----------
 
 import pandas as pd
+import requests
+import json
+from transformers import pipeline
 import mlflow
 from mlflow.models import infer_signature
 from mlflow.transformers import generate_signature_output
 from mlflow.tracking import MlflowClient
-from transformers import pipeline
 
 # COMMAND ----------
 
@@ -50,15 +52,15 @@ input_example = pd.DataFrame(["Hello, I'm a language model,"])
 output = generate_signature_output(text_generation_pipeline, input_example)
 signature = infer_signature(input_example, output, params=inference_config)
 
-# Log model with mlflow huggingface falvour
+# Log the model with mlflow hugging face flavor
 with mlflow.start_run():
     model_info = mlflow.transformers.log_model(
-        transformers_model=text_generation_pipeline,
-        artifact_path="my_sentence_generator",
-        inference_config=inference_config,
-        input_example=input_example,
-        signature=signature,
-        registered_model_name="gpt2",
+        transformers_model = text_generation_pipeline,
+        artifact_path = "my_sentence_generator",
+        inference_config = inference_config,
+        input_example = input_example,
+        signature = signature,
+        registered_model_name = "gpt2",
     )
 
 # COMMAND ----------
@@ -68,10 +70,13 @@ with mlflow.start_run():
 
 # COMMAND ----------
 
+# Load the model
 my_sentence_generator = mlflow.pyfunc.load_model(model_info.model_uri)
+
+# Generate a prediction using the loaded model with the given parameters
 my_sentence_generator.predict(
     pd.DataFrame(["Hello, I'm a language model,"]),
-    params={"max_length": 20, "temperature": 1},
+    params={"max_new_tokens": 20, "temperature": 1},
 )
 
 # COMMAND ----------
@@ -83,19 +88,31 @@ my_sentence_generator.predict(
 
 # COMMAND ----------
 
+# Set the name of the MLflow endpoint
 endpoint_name = "gpt2"
-model_name = "gpt2"
-model_version =  MlflowClient().get_registered_model(model_name).latest_versions[0].version
-workload_type = "CPU" # Compute type (options includes "CPU", "GPU_SMALL", "GPU_MEDIUM" and more)
-workload_size = "Small" # Compute Scale-out (some options are "Small" , "Medium","Large" and more)
-scale_to_zero = True # Scale to zero is currently only support for CPU endpoints
-API_ROOT = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiUrl().get()
+
+# Name of the registered MLflow model
+model_name = "gpt2" 
+
+# Get the latest version of the MLflow model
+model_version = MlflowClient().get_registered_model(model_name).latest_versions[0].version 
+
+# Specify the type of compute (CPU, GPU_SMALL, GPU_MEDIUM, etc.)
+workload_type = "GPU" 
+
+# Specify the scale-out size of compute (Small, Medium, Large, etc.)
+workload_size = "Small" 
+
+# Specify Scale to Zero(only supported for CPU endpoints)
+scale_to_zero = False 
+
+# Get the API endpoint and token for the current notebook context
+API_ROOT = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiUrl().get() 
 API_TOKEN = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()
 
 # COMMAND ----------
 
-import json
-import requests
+# send the POST request to create the serving endpoint
 
 data = {
     "name": endpoint_name,
@@ -106,21 +123,16 @@ data = {
                 "model_version": model_version,
                 "workload_size": workload_size,
                 "scale_to_zero_enabled": scale_to_zero,
-                "workload_type": workload_type
+                "workload_type": workload_type,
             }
         ]
-    }
+    },
 }
 
-headers = {
-    "Context-Type": "text/json",
-    "Authorization": f"Bearer {API_TOKEN}"
-}
+headers = {"Context-Type": "text/json", "Authorization": f"Bearer {API_TOKEN}"}
 
 response = requests.post(
-    url=f"{API_ROOT}/api/2.0/preview/serving-endpoints",
-    json=data,
-    headers=headers
+    url=f"{API_ROOT}/api/2.0/serving-endpoints", json=data, headers=headers
 )
 
 print(json.dumps(response.json(), indent=4))
@@ -128,5 +140,29 @@ print(json.dumps(response.json(), indent=4))
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## View your endpoint!
+# MAGIC ## View your endpoint
 # MAGIC To see your more information about your endpoint, go to the "Serving" section on the left navigation bar and search for your endpoint name.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Query your endpoint!
+# MAGIC
+# MAGIC Once your endpoint is ready, you can query it by making an API request. Depending on the model size and complexity, it can take up to 30 minutes or more for the endpoint to get ready.  
+
+# COMMAND ----------
+
+# send the POST request to create the serving endpoint
+
+data = {
+  "inputs" : ["Hello, I'm a language model,"],
+  "params" : {"max_new_tokens": 100, "temperature": 1}
+}
+
+headers = {"Context-Type": "text/json", "Authorization": f"Bearer {API_TOKEN}"}
+
+response = requests.post(
+    url=f"{API_ROOT}/serving-endpoints/{endpoint_name}/invocations", json=data, headers=headers
+)
+
+print(json.dumps(response.json()))
