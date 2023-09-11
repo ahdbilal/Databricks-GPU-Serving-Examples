@@ -15,12 +15,6 @@
 # MAGIC %md
 # MAGIC ## Prerequisites
 # MAGIC * Attach a cluster to the notebook with sufficient memory to load MPT-7B. We recommend a cluster with at least 32 GB of memory.
-# MAGIC * (Optional) Install the latest transformers. MPT-7B native support in transformers was added on July 25, 2023. At the time of this notebook release, MPT-7B native support in transformers has not been officially released. For full compatibility of MPT-7B with mlflow, install the latest version from github. Optimized serving will work with older versions of transformers for MPT-7B, but there may be issues with loading the model locally.
-# MAGIC
-# MAGIC To install the latest version of transformers off github, run:
-# MAGIC ```
-# MAGIC %pip install git+https://github.com/huggingface/transformers@main
-# MAGIC ```
 # MAGIC
 # MAGIC
 
@@ -28,7 +22,6 @@
 
 !pip install -U transformers
 !pip install -U accelerate
-!pip install -U tensorflow
 !pip install -U mlflow
 dbutils.library.restartPython()
 
@@ -38,8 +31,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # If you are using the latest version of transformers that has native MPT support, replace the following line with:
 model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-30b', low_cpu_mem_usage=True)
-
-#model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-30b', low_cpu_mem_usage=True, trust_remote_code=True)
 
 # COMMAND ----------
 
@@ -73,14 +64,6 @@ input_schema = Schema([
     ColSpec("integer", "candidate_count", optional= True)
 ])
 
-output_schema = Schema([
-    ColSpec("string", "prompt"),
-    ColSpec("double", "temperature", optional= True),
-    ColSpec("integer", "max_tokens", optional= True),
-    ColSpec("string", "stop", optional= True), # Assuming the inner arrays only contain strings
-    ColSpec("integer", "candidate_count", optional= True)
-])
-
 ouput_schema = Schema([
     ColSpec('string', 'predictions')
 ])
@@ -103,7 +86,7 @@ with mlflow.start_run():
     mlflow.transformers.log_model(
         transformers_model=components,
         artifact_path="mpt",
-        signature=signature,
+        #signature=signature,
         registered_model_name="opti-mpt-30b",
         input_example={"prompt": np.array(["Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nWhat is Apache Spark?\n\n### Response:\n"]), "max_tokens": np.array([75]), "temperature": np.array([0.0])},
         metadata = {"task": "llm/v1/completions"}
