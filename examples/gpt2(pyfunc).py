@@ -1,8 +1,8 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Geting Stared with Model Serving
+# MAGIC # Geting Stared with MLflow pyfunc for Model Serving
 # MAGIC
-# MAGIC In this guide, we demonstrate how to deploy a model to a serving endpoint. Though we specifically will deploy a GPT-2 model to a GPU endpoint, the workflow outlined here can be adapted for deploying other types of models to either CPU or GPU endpoints.
+# MAGIC In this guide, we'll show you how to deploy MLflow pyfunc to a serving endpoint. Mlflow pyfunc offers greater flexibility and customization to your deployment - You can run any custom model, add preprocessing or post-processing logic, or execute any arbitrary Python code. While the MLflow flavor is recommended for optimal performance, you can use MLflow pyfunc where more customization is required. Below, we demonstrate how to deploy a GPT-2 model with pyfunc to a GPU endpoint, but the workflow outlined below would work with various other types of models to either CPU or GPU endpoints.models and CPU endpoints as well.
 
 # COMMAND ----------
 
