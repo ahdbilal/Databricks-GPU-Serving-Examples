@@ -30,11 +30,11 @@ dbutils.library.restartPython()
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # If you are using the latest version of transformers that has native MPT support, replace the following line with:
-model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-30b', low_cpu_mem_usage=True)
+model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-7b', low_cpu_mem_usage=True)
 
 # COMMAND ----------
 
-tokenizer = AutoTokenizer.from_pretrained("mosaicml/mpt-30b")
+tokenizer = AutoTokenizer.from_pretrained("mosaicml/mpt-7b")
 
 # COMMAND ----------
 
@@ -87,7 +87,7 @@ with mlflow.start_run():
         transformers_model=components,
         artifact_path="mpt",
         #signature=signature,
-        registered_model_name="opti-mpt-30b",
+        registered_model_name="mpt-7b",
         input_example={"prompt": np.array(["Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\nWhat is Apache Spark?\n\n### Response:\n"]), "max_tokens": np.array([75]), "temperature": np.array([0.0])},
         metadata = {"task": "llm/v1/completions"}
     )
@@ -101,8 +101,8 @@ with mlflow.start_run():
 
 # COMMAND ----------
 
-endpoint_name = "mpt-7b-instruct "
-model_name = "mpt-7b-instruct "
+endpoint_name = "mpt-7b"
+model_name = "mpt-7b"
 model_version = "1"
 served_model_workload_size = "Small"
 served_model_scale_to_zero = False
