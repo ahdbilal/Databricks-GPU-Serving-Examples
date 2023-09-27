@@ -44,14 +44,11 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
 model = AutoModelForCausalLM.from_pretrained(
-    #"meta-llama/Llama-2-13b-chat-hf", 
-    "codellama/CodeLlama-34b-Instruct-hf",
-    device_map="auto",
+    #"meta-llama/Llama-2-7b-chat-hf",
     torch_dtype=torch.bfloat16
 )
 tokenizer = AutoTokenizer.from_pretrained(
-    #"meta-llama/Llama-2-13b-chat-hf", 
-    "codellama/CodeLlama-34b-Instruct-hf"
+    "meta-llama/Llama-2-7b-chat-hf"
 )
 
 # COMMAND ----------
@@ -109,7 +106,7 @@ import mlflow
 mlflow.set_registry_uri('databricks-uc')
 CATALOG = "ml"
 SCHEMA = "models"
-registered_model_name = f"{CATALOG}.{SCHEMA}.llama34b"
+registered_model_name = f"{CATALOG}.{SCHEMA}.llama7b"
 
 # Start a new MLflow run
 with mlflow.start_run():
@@ -137,16 +134,16 @@ with mlflow.start_run():
 # COMMAND ----------
 
 # Set the name of the MLflow endpoint
-endpoint_name = "llama34bx2"
+endpoint_name = "llama7b"
 
 # Name of the registered MLflow model
 model_name = registered_model_name
 
 # Get the latest version of the MLflow model
-model_version = 2
+model_version = 1
 
 # Specify the type of compute (CPU, GPU_SMALL, GPU_MEDIUM, etc.)
-workload_type = "GPU_LARGE_2" 
+workload_type = "GPU_MEDIUM" 
 
 # Specify the compute scale-out size(Small, Medium, Large, etc.)
 workload_size = "Small" 
