@@ -124,13 +124,13 @@ with mlflow.start_run():
 endpoint_name = "mpt7b"
 
 # Name of the registered MLflow model
-model_name = "ml.models.mpt7b" 
+model_name = registered_model_name 
 
 # Get the latest version of the MLflow model
 model_version = 1
 
 # Specify the type of compute (CPU, GPU_SMALL, GPU_MEDIUM, etc.)
-workload_type = "GPU_LARGE" 
+workload_type = "GPU_MEDIUM" 
 
 # Specify the compute scale-out size(Small, Medium, Large, etc.)
 workload_size = "Small" 
