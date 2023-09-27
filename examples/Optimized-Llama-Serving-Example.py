@@ -44,7 +44,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
 model = AutoModelForCausalLM.from_pretrained(
-    #"meta-llama/Llama-2-7b-chat-hf",
+    "meta-llama/Llama-2-7b-chat-hf",
     torch_dtype=torch.bfloat16
 )
 tokenizer = AutoTokenizer.from_pretrained(
