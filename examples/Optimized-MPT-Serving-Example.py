@@ -36,7 +36,7 @@ dbutils.library.restartPython()
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-7b', device_map="auto", trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained('mosaicml/mpt-7b', device_map="auto", torch_dtype=torch.bfloat16, trust_remote_code=True)
 tokenizer = AutoTokenizer.from_pretrained("mosaicml/mpt-7b")
 
 # COMMAND ----------
